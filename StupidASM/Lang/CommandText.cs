@@ -30,7 +30,7 @@
             return _command;
         }
         
-        public string[] GetArgs()
+        public string[] GetArguments()
         {
             if(_args != null)
                 return _args;
