@@ -5,7 +5,6 @@ public class IdleBehaviour
     public void Start()
     {
         var memory = new Memory();
-
         var parser = new CommandParser(memory);
 
         while(true)
