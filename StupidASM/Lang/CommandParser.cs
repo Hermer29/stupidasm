@@ -15,29 +15,34 @@ namespace StupidASM.Lang
         public Command Parse(string line, int? number = null)
         {
             var commandText = CommandText.Parse(line);
-            var command = commandText.GetCommand();
-            
-            if (command.ToLower() == "add")
+
+            var command = GetCommand(commandText);
+
+            if(!(command is EmptyCommand))
             {
-                return new AddCommand(commandText.GetArguments(), _memory);
+                return command;
             }
-            else if (command.ToLower() == "mov")
-            {
-                return new MovCommand(commandText.GetArguments(), _memory);
-            }
-            else if (command.ToLower() == "prt")
-            {
-                return new PrtCommand(commandText.GetArguments(), _memory);
-            }
-            else if(Regex.IsMatch(line, @"^\s{0,}[{}]\s{0,}$"))
-            {
-                return new EmptyCommand();
-            }
-            
             ThrowInvalidSyntax(number);
+            return new EmptyCommand();
         }
+
+        private Command GetCommand(CommandText text)
+        {
+            switch(text.GetCommand())
+            {
+                case "prt":
+                    return new PrtCommand(text.GetArguments(), _memory);
+                case "mov":
+                    return new MovCommand(text.GetArguments(), _memory);
+                case "add":
+                    return new AddCommand(text.GetArguments(), _memory);
+                default:
+                    return new EmptyCommand();
+            }
+        }
+
         
-        public void ThrowInvalidSyntax(int? atLine)
+        private void ThrowInvalidSyntax(int? atLine)
         {
             if(atLine != null)
             {

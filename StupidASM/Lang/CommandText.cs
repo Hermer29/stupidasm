@@ -1,24 +1,25 @@
-﻿namespace StupidASM.Lang
+﻿using System.Text.RegularExpressions;
+
+namespace StupidASM.Lang
 {
     public class CommandText
     {
-        private string _line;
         private string? _command;
-        private string[] _args;
+        private string[]? _args;
         private string[] _delimitedLine;
 
-        private CommandText(string line)
+        private CommandText(string[] delimitedLine)
         {
-            _line = line;
+            _delimitedLine = delimitedLine;
         }
         
         public static CommandText Parse(string line)
         {
             var pattern = @"s+";
             var filtered = Regex.Replace(line, pattern, " ");
-            var deleteInStart = Regex.Replace(line, @"^s+", "");
-            var text = new CommandText(line);
-            text._delimitedLine = deleteInStart.Split(' ');
+            var deleteInStart = Regex.Replace(filtered, @"^s+", "");
+            var text = new CommandText(deleteInStart.Split(' '));
+            return text;
         }
 
         public string GetCommand()
@@ -35,7 +36,7 @@
             if(_args != null)
                 return _args;
             
-            _args = _delimitedLine.Skip(GetCommand()).ToArray();
+            _args = _delimitedLine.Skip(1).ToArray();
             return _args;
         }
     }

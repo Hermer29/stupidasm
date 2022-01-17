@@ -11,9 +11,22 @@ public class IdleBehaviour
         {
             Console.Write(">>> ");
             var input = Console.ReadLine();
-
+            if (string.IsNullOrEmpty(input))
+            {
+                continue;
+            }
             var command = parser.Parse(input);
             command.Execute();
         }
+    }
+
+    private void WriteDebug(CommandText commandText)
+    {
+        Console.WriteLine("Args: ");
+        foreach(var arg in commandText.GetArguments())
+        {
+            Console.WriteLine(arg);
+        }
+        Console.WriteLine($"\nCommand: {commandText.GetCommand()}");
     }
 }
